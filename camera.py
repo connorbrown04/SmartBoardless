@@ -1,12 +1,7 @@
 import math
 import cv2 
 import numpy as np 
-import ctypes
-
-(width, height) = (0, 0)
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('Title')
-pygame.display.flip()    
+import ctypes  
 
 cap1 = cv2.VideoCapture(1)
 cap2 = cv2.VideoCapture(2)
@@ -134,26 +129,3 @@ while cap1.isOpened() and cap2.isOpened():
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
-
-    
-    
-
-
-"""
-cap = cv2.VideoCapture(0) 
-lowerGreen = np.array([0,200,0]) 
-upperGreen = np.array([50,255,50]) 
-while(cap.isOpened()): 
-      
-    ret, frame = cap.read() 
-
-    mask = cv2.inRange(frame, lowerGreen, upperGreen)
-    cv2.imshow('Original', frame)
-
-    cv2.imshow('Mask', mask)   
-    if cv2.waitKey(25) & 0xFF == ord('q'): 
-        break 
-
-cap.release() 
-cv2.destroyAllWindows()
-"""
