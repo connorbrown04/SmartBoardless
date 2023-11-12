@@ -51,7 +51,7 @@ while cap1.isOpened() and cap2.isOpened():
     #takes the mask with blue
     bmask1 = cv2.inRange(hsv_frame1, lower_blue, upper_blue)
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
-    #gets the median radian of the green mask
+    
 
 
     def median(mask):
@@ -81,7 +81,6 @@ while cap1.isOpened() and cap2.isOpened():
     bmedianX2 = median(bmask2)
     bradians2 = ((bmedianX2-320)*45/320)#*(math.pi/180)  
 
-    # print(gmedianX2)
 
 
     #finds which of the median radians are the closest together and averages them
@@ -110,6 +109,7 @@ while cap1.isOpened() and cap2.isOpened():
 
     radians1 *= -(math.pi/180)
     radians2 *= -(math.pi/180)
+
     #uses the radians to determine x and y coordinates
     w = 100
     h = 100
@@ -128,18 +128,15 @@ while cap1.isOpened() and cap2.isOpened():
     x += 50
     y += 50
 
-
-
     x = (x/100)*4095
     y = (y/100)*4095
 
-    
     x = math.floor((x + prevX)/2)
     y = math.floor((y + prevY)/2)
 
-    # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
-    #     x, y = prevX, prevY
-    # prevX, prevY = x, y
+    if(abs(x - prevX) > 400 or abs(y - prevY) > 400):
+        x, y = prevX, prevY
+    prevX, prevY = x, y
 
 
     s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
@@ -163,7 +160,7 @@ while cap1.isOpened() and cap2.isOpened():
     # cv2.imshow('bmask1', bmask1)
 
     # cv2.imshow('Original Frame2', frame2)
-    cv2.imshow('gmask2', gmask2)
+    # cv2.imshow('gmask2', gmask2)
     # cv2.imshow('pmask2', pmask2)
     # cv2.imshow('bmask2', bmask2)
 
