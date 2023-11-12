@@ -2,6 +2,7 @@ import math
 import cv2 
 import numpy as np 
 import struct
+import pandas as pd
 #import ctypes  
 
 def write_report(report):
@@ -9,7 +10,7 @@ def write_report(report):
     fd.write(report)
 
 
-cap1 = cv2.VideoCapture(0)
+cap1 = cv2.VideoCapture(1)
 cap2 = cv2.VideoCapture(2)
 
 right = False
@@ -52,11 +53,13 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
-    gmask1Sum = [0]*len(gmask1[0])
-
-    for i in range(len(gmask1)):
-        for j in range(len(gmask1[i])):
-            if(gmask1[i][j] > 0): gmask1Sum[j] += 1
+    def median(histogram):
+        total = 0
+        median_index = (histogram.sum() + 1) / 2
+        for i in range(len(histogram)):
+            total += histogram[i]
+        if total > median_index:
+            return i
 
     gmaskCoords1 = np.column_stack(np.where(gmask1 > 0))
     gmaskCoords2 = np.column_stack(np.where(gmask2 > 0))
@@ -159,21 +162,23 @@ while cap1.isOpened() and cap2.isOpened():
     # bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
 
     #shows the masks of the cameras
-    cv2.imshow('Original Frame1', frame1)
-    cv2.imshow('gmask1', gmask1)
-    cv2.imshow('pmask1', pmask1)
-    cv2.imshow('bmask1', bmask1)
+    # cv2.imshow('Original Frame1', frame1)
+    # cv2.imshow('gmask1', gmask1)
+    # cv2.imshow('pmask1', pmask1)
+    # cv2.imshow('bmask1', bmask1)
 
-    cv2.imshow('Original Frame2', frame2)
+    # cv2.imshow('Original Frame2', frame2)
     cv2.imshow('gmask2', gmask2)
-    cv2.imshow('pmask2', pmask2)
-    cv2.imshow('bmask2', bmask2)
+    # cv2.imshow('pmask2', pmask2)
+    # cv2.imshow('bmask2', bmask2)
+
+
+
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        for row in gmask1Sum:
-            print(row, end=' ')
-            # for val in row:
-            #     print(val, end='')
-            # print('')
+        g2Frame = pd.DataFrame(gmask2)
+        g2Hist = g2Frame.sum()
+        print(median(g2Hist.div(255)))
+        print(gmedianX1)
 
 
