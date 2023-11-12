@@ -114,11 +114,12 @@ while cap1.isOpened() and cap2.isOpened():
     x = math.floor((x/100)*4095)
     y = math.floor((y/100)*4095)
 
-    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    write_report(s)
+
+    # s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    # write_report(s)
 
 
-    #print(f"{x} , {y}")
+    print(f"{x} , {y}")
     # gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
     # gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
 
