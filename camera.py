@@ -30,7 +30,6 @@ upper_blue = np.array([100, 255, 255])
 
 prevX = 0
 prevY = 0
-a = True;
 
 #will run into a camera dies or q is pressed
 while cap1.isOpened() and cap2.isOpened():
@@ -53,7 +52,8 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
-    gmask1Sum = []
+    gmask1Sum = list(size=len(gmask1))
+
     for i in range(len(gmask1)):
         for j in range(len(gmask1[i])):
             if(gmask1[i][j] > 0): gmask1Sum[i] += 1
