@@ -21,10 +21,10 @@ def write_report(report):
     fd = open('/dev/hidg0', 'rb+')
     fd.write(report)
 
-def send_reports():
-    while(running):
-        s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
-        write_report(s)
+# def send_reports():
+#     while(running):
+#         s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
+#         write_report(s)
 
 
 def on_click(x, y, button, pressed):
@@ -38,9 +38,9 @@ mouse_listener = mouse.Listener(on_click=on_click)
 
 mouse_thread = threading.Thread(target=mouse_listener.start)
 
-report_thread = threading.Thread(target=send_reports)
+# report_thread = threading.Thread(target=send_reports)
 mouse_thread.start()
-report_thread.start()
+# report_thread.start()
 
 
 cap1 = cv2.VideoCapture(2)
@@ -174,7 +174,8 @@ while cap1.isOpened() and cap2.isOpened() and running:
     #     x, y = prevX, prevY
     prevX, prevY = x, y
 
-
+    s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
+    write_report(s) 
     
 
 
