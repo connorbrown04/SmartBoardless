@@ -10,11 +10,9 @@ cap2 = cv2.VideoCapture(2)
 right = False
 left = False
 
-print(os.environ)
-
-hdc = ctypes.cdll.user32.GetDC(0)  # Get the device context of the entire screen
-dpi = ctypes.cdll.gdi32.GetDeviceCaps(hdc, 88)  # 88 corresponds to LOGPIXELSX (horizontal DPI)
-ctypes.cdll.user32.ReleaseDC(0, hdc)
+#hdc = ctypes.cdll.user32.GetDC(0)  # Get the device context of the entire screen
+#dpi = ctypes.cdll.gdi32.GetDeviceCaps(hdc, 88)  # 88 corresponds to LOGPIXELSX (horizontal DPI)
+#ctypes.cdll.user32.ReleaseDC(0, hdc)
 
 lower_lime_green = np.array([35, 40, 40])
 upper_lime_green = np.array([70, 255, 255])
