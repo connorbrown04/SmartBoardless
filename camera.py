@@ -27,19 +27,19 @@ def write_report(report):
 #         write_report(s)
 
 
-def on_click(x, y, button, pressed):
-    if pressed:
-        pressed = True
-    else:
-        pressed = False
+# def on_click(x, y, button, pressed):
+#     if pressed:
+#         pressed = True
+#     else:
+#         pressed = False
 
-#creates listener and sets it to its own thread
-mouse_listener = mouse.Listener(on_click=on_click)
+# #creates listener and sets it to its own thread
+# mouse_listener = mouse.Listener(on_click=on_click)
 
-mouse_thread = threading.Thread(target=mouse_listener.start)
+# mouse_thread = threading.Thread(target=mouse_listener.start)
 
-# report_thread = threading.Thread(target=send_reports)
-mouse_thread.start()
+# # report_thread = threading.Thread(target=send_reports)
+# mouse_thread.start()
 # report_thread.start()
 
 
