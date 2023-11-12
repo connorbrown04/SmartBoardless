@@ -12,8 +12,8 @@ def write_report(report):
     fd.write(report)
 
 
-cap1 = cv2.VideoCapture(0)
-cap2 = cv2.VideoCapture(2)
+cap1 = cv2.VideoCapture(1)
+cap2 = cv2.VideoCapture(3)
 
 right = False
 left = False
