@@ -11,6 +11,15 @@ def write_report(report):
     fd = open('/dev/hidg0', 'rb+')
     fd.write(report)
 
+gx = 0
+gy = 0
+
+def reports():
+    while(True):
+        s = struct.pack('<B?B2HB', 1, True, 1, gx, gy, 1)
+        write_report(s)
+
+
 
 cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
@@ -34,143 +43,151 @@ upper_blue = np.array([100, 255, 255])
 prevX = 0
 prevY = 0
 
-#will run into a camera dies or q is pressed
-while cap1.isOpened() and cap2.isOpened():
+def process_img():
+    while cap1.isOpened() and cap2.isOpened():
     #takes input from both cameras
-    ret1, frame1 = cap1.read()
-    ret2, frame2 = cap2.read()
-    if not ret1 or not ret2:
-        break
-    #sets them to HSV format
-    hsv_frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2HSV)
-    hsv_frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2HSV)
-    #takes the mask with green
-    gmask1 = cv2.inRange(hsv_frame1, lower_lime_green, upper_lime_green)
-    gmask2 = cv2.inRange(hsv_frame2, lower_lime_green, upper_lime_green)
-    #takes the mask with pink
-    pmask1 = cv2.inRange(hsv_frame1, lower_hot_pink, upper_hot_pink)
-    pmask2 = cv2.inRange(hsv_frame2, lower_hot_pink, upper_hot_pink)
-    #takes the mask with blue
-    bmask1 = cv2.inRange(hsv_frame1, lower_blue, upper_blue)
-    bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
-    
+        ret1, frame1 = cap1.read()
+        ret2, frame2 = cap2.read()
 
-
-    def median(mask):
-        frame = pd.DataFrame(mask)
-        histogram = frame.sum()
-        histogram.div(255)
-        total = 0
-        median_index = (histogram.sum() + 1) / 2
-        for value in range(len(histogram)):
-            total += histogram[value]
-            if total > median_index:
-                return value
-        return 0
-    
-    
-    gmedianX1 = median(gmask1)
-    gradians1 = (gmedianX1-320)*45/320#*(math.pi/180)
-    gmedianX2 = median(gmask2)
-    gradians2 = ((gmedianX2-320)*45/320)#*(math.pi/180)
+        #sets them to HSV format
+        hsv_frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2HSV)
+        hsv_frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2HSV)
+        #takes the mask with green
+        gmask1 = cv2.inRange(hsv_frame1, lower_lime_green, upper_lime_green)
+        gmask2 = cv2.inRange(hsv_frame2, lower_lime_green, upper_lime_green)
+        #takes the mask with pink
+        pmask1 = cv2.inRange(hsv_frame1, lower_hot_pink, upper_hot_pink)
+        pmask2 = cv2.inRange(hsv_frame2, lower_hot_pink, upper_hot_pink)
+        #takes the mask with blue
+        bmask1 = cv2.inRange(hsv_frame1, lower_blue, upper_blue)
+        bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
         
-    pmedianX1 = median(pmask1)
-    pradians1 = (pmedianX1-320)*45/320#*(math.pi/180)
-    pmedianX2 = median(pmask2)
-    pradians2 = ((pmedianX2-320)*45/320)#*(math.pi/180)
+
+
+        def median(mask):
+            frame = pd.DataFrame(mask)
+            histogram = frame.sum()
+            histogram.div(255)
+            total = 0
+            median_index = (histogram.sum() + 1) / 2
+            for value in range(len(histogram)):
+                total += histogram[value]
+                if total > median_index:
+                    return value
+            return 0
         
-    bmedianX1 = median(bmask1)
-    bradians1 = (bmedianX1-320)*45/320#*(math.pi/180)
-    bmedianX2 = median(bmask2)
-    bradians2 = ((bmedianX2-320)*45/320)#*(math.pi/180)  
+        
+        gmedianX1 = median(gmask1)
+        gradians1 = (gmedianX1-320)*45/320#*(math.pi/180)
+        gmedianX2 = median(gmask2)
+        gradians2 = ((gmedianX2-320)*45/320)#*(math.pi/180)
+            
+        pmedianX1 = median(pmask1)
+        pradians1 = (pmedianX1-320)*45/320#*(math.pi/180)
+        pmedianX2 = median(pmask2)
+        pradians2 = ((pmedianX2-320)*45/320)#*(math.pi/180)
+            
+        bmedianX1 = median(bmask1)
+        bradians1 = (bmedianX1-320)*45/320#*(math.pi/180)
+        bmedianX2 = median(bmask2)
+        bradians2 = ((bmedianX2-320)*45/320)#*(math.pi/180)  
 
 
 
-    #finds which of the median radians are the closest together and averages them
-    gpdiff1 = abs(gradians1-pradians1)
-    gbdiff1 = abs(gradians1-bradians1)
-    pbdiff1 = abs(pradians1-bradians1)
-    diffmin1 = min(gbdiff1,gpdiff1,pbdiff1)
-    if diffmin1 == gpdiff1:
-        radians1 = (gradians1+pradians1)/2
-    elif diffmin1 == gbdiff1:
-        radians1 = (gradians1+bradians1)/2
-    else:
-        radians1 = (pradians1+bradians1)/2
+        #finds which of the median radians are the closest together and averages them
+        gpdiff1 = abs(gradians1-pradians1)
+        gbdiff1 = abs(gradians1-bradians1)
+        pbdiff1 = abs(pradians1-bradians1)
+        diffmin1 = min(gbdiff1,gpdiff1,pbdiff1)
+        if diffmin1 == gpdiff1:
+            radians1 = (gradians1+pradians1)/2
+        elif diffmin1 == gbdiff1:
+            radians1 = (gradians1+bradians1)/2
+        else:
+            radians1 = (pradians1+bradians1)/2
 
-    gpdiff2 = abs(gradians2-pradians2)
-    gbdiff2 = abs(gradians2-bradians2)
-    pbdiff2 = abs(pradians2-bradians2)
-    diffmin2 = min(gbdiff2,gpdiff2,pbdiff2)
-    if diffmin2 == gpdiff2:
-        radians2 = (gradians2+pradians2)/2
-    elif diffmin2 == gbdiff2:
-        radians2 = (gradians2+bradians2)/2
-    else:
-        radians2 = (pradians2+bradians2)/2
-    
+        gpdiff2 = abs(gradians2-pradians2)
+        gbdiff2 = abs(gradians2-bradians2)
+        pbdiff2 = abs(pradians2-bradians2)
+        diffmin2 = min(gbdiff2,gpdiff2,pbdiff2)
+        if diffmin2 == gpdiff2:
+            radians2 = (gradians2+pradians2)/2
+        elif diffmin2 == gbdiff2:
+            radians2 = (gradians2+bradians2)/2
+        else:
+            radians2 = (pradians2+bradians2)/2
+        
 
-    radians1 *= -(math.pi/180)
-    radians2 *= -(math.pi/180)
+        radians1 *= -(math.pi/180)
+        radians2 *= -(math.pi/180)
 
-    #uses the radians to determine x and y coordinates
-    w = 100
-    h = 100
-    x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
-    y = math.tan(radians1)*(x+w)
+        #uses the radians to determine x and y coordinates
+        w = 100
+        h = 100
+        x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
+        y = math.tan(radians1)*(x+w)
 
-    x += 50
-    y += 50
+        x += 50
+        y += 50
 
-    if(x < 0): x = 0
-    if(y < 0): y = 0
+        if(x < 0): x = 0
+        if(y < 0): y = 0
 
-    x = (x/100)*16383
-    y = 16383 - (y/100)*16383
-
-
-
-    x = math.floor((x + prevX)/4)
-    y = math.floor((y + prevY)/4)
-
-    # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
-    #     x, y = prevX, prevY
-    # prevX, prevY = x, y
-
-
-    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    write_report(s)
-
-
-    # print(f"{x} , {y}")
-    # gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
-    # gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
-
-    # presult1 = cv2.bitwise_and(frame1, frame1, mask=pmask1)
-    # presult2 = cv2.bitwise_and(frame2, frame2, mask=pmask2)
-
-    # bresult1 = cv2.bitwise_and(frame1, frame1, mask=bmask1)
-    # bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
-
-    #shows the masks of the cameras
-    # cv2.imshow('Original Frame1', frame1)
-    # cv2.imshow('gmask1', gmask1)
-    # cv2.imshow('pmask1', pmask1)
-    # cv2.imshow('bmask1', bmask1)
-
-    # cv2.imshow('Original Frame2', frame2)
-    # cv2.imshow('gmask2', gmask2)
-    # cv2.imshow('pmask2', pmask2)
-    # cv2.imshow('bmask2', bmask2)
+        x = (x/100)*16383
+        y = 16383 - (y/100)*16383
 
 
 
-    
+        x = math.floor((x + prevX)/4)
+        y = math.floor((y + prevY)/4)
 
 
-    #stops everything if q is pressed
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
+        global gx 
+        gx = x
+        global gy 
+        gy = y
+        # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
+        #     x, y = prevX, prevY
+        # prevX, prevY = x, y
+
+
+        
+
+
+        # print(f"{x} , {y}")
+        # gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
+        # gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
+
+        # presult1 = cv2.bitwise_and(frame1, frame1, mask=pmask1)
+        # presult2 = cv2.bitwise_and(frame2, frame2, mask=pmask2)
+
+        # bresult1 = cv2.bitwise_and(frame1, frame1, mask=bmask1)
+        # bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
+
+        #shows the masks of the cameras
+        # cv2.imshow('Original Frame1', frame1)
+        # cv2.imshow('gmask1', gmask1)
+        # cv2.imshow('pmask1', pmask1)
+        # cv2.imshow('bmask1', bmask1)
+
+        # cv2.imshow('Original Frame2', frame2)
+        # cv2.imshow('gmask2', gmask2)
+        # cv2.imshow('pmask2', pmask2)
+        # cv2.imshow('bmask2', bmask2)
+
+
+
+
+
+t1 = threading.Thread(target=reports)
+t2 = threading.Thread(target=process_img)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
     
 
 
