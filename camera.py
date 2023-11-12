@@ -129,8 +129,8 @@ while cap1.isOpened() and cap2.isOpened():
     x += 50
     y += 50
 
-    x = (x/100)*65535
-    y = (y/100)*65535
+    x = (x/100)*8191
+    y = (y/100)*8191
 
     x = math.floor((x + prevX)/4)
     y = math.floor((y + prevY)/4)
