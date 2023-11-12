@@ -67,19 +67,21 @@ while cap1.isOpened() and cap2.isOpened():
     
     
     gmedianX1 = median(gmask1)
-    gradians1 = gmedianX1*45/300*(math.pi/180)
+    gradians1 = (gmedianX1-320)*45/320#*(math.pi/180)
     gmedianX2 = median(gmask2)
-    gradians2 = (gmedianX2*45/300)*(math.pi/180)
+    gradians2 = ((gmedianX2-320)*45/320)#*(math.pi/180)
         
     pmedianX1 = median(pmask1)
-    pradians1 = pmedianX1*45/300*(math.pi/180)
+    pradians1 = (pmedianX1-320)*45/320#*(math.pi/180)
     pmedianX2 = median(pmask2)
-    pradians2 = (pmedianX2*45/300)*(math.pi/180)
+    pradians2 = ((pmedianX2-320)*45/320)#*(math.pi/180)
         
     bmedianX1 = median(bmask1)
-    bradians1 = bmedianX1*45/300*(math.pi/180)
+    bradians1 = (bmedianX1-320)*45/320#*(math.pi/180)
     bmedianX2 = median(bmask2)
-    bradians2 = (bmedianX2*45/300)*(math.pi/180)     
+    bradians2 = ((bmedianX2-320)*45/320)#*(math.pi/180)  
+
+    # print(gmedianX2)
 
 
     #finds which of the median radians are the closest together and averages them
@@ -97,7 +99,7 @@ while cap1.isOpened() and cap2.isOpened():
     gpdiff2 = abs(gradians2-pradians2)
     gbdiff2 = abs(gradians2-bradians2)
     pbdiff2 = abs(pradians2-bradians2)
-    diffmin2 = min(gbdiff1,gpdiff1,pbdiff1)
+    diffmin2 = min(gbdiff2,gpdiff2,pbdiff2)
     if diffmin2 == gpdiff2:
         radians2 = (gradians2+pradians2)/2
     elif diffmin2 == gbdiff2:
@@ -105,13 +107,17 @@ while cap1.isOpened() and cap2.isOpened():
     else:
         radians2 = (pradians2+bradians2)/2
     
+
+    radians1 *= -(math.pi/180)
+    radians2 *= -(math.pi/180)
     #uses the radians to determine x and y coordinates
     w = 100
     h = 100
     x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
     y = math.tan(radians1)*(x+w)
-
     
+    print(x, ', ', y)
+
     if x < -50:
         x = -50
     if x > 50:
@@ -124,16 +130,18 @@ while cap1.isOpened() and cap2.isOpened():
     x += 50
     y += 50
 
+
+
     x = (x/100)*4095
     y = (y/100)*4095
 
-
+    
     x = math.floor((x + prevX)/2)
     y = math.floor((y + prevY)/2)
 
-    if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
-        x, y = prevX, prevY
-    prevX, prevY = x, y
+    # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
+    #     x, y = prevX, prevY
+    # prevX, prevY = x, y
 
 
     # s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
