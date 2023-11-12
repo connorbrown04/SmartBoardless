@@ -64,6 +64,7 @@ while cap1.isOpened() and cap2.isOpened():
             total += histogram[value]
             if total > median_index:
                 return value
+        return 0
     
     
     gmedianX1 = median(gmask1)
@@ -134,9 +135,9 @@ while cap1.isOpened() and cap2.isOpened():
     x = math.floor((x + prevX)/4)
     y = math.floor((y + prevY)/4)
 
-    if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
-        x, y = prevX, prevY
-    prevX, prevY = x, y
+    # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
+    #     x, y = prevX, prevY
+    # prevX, prevY = x, y
 
 
     s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
