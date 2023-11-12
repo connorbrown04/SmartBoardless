@@ -30,6 +30,7 @@ upper_blue = np.array([100, 255, 255])
 
 prevX = 0
 prevY = 0
+a = True;
 
 #will run into a camera dies or q is pressed
 while cap1.isOpened() and cap2.isOpened():
@@ -51,6 +52,9 @@ while cap1.isOpened() and cap2.isOpened():
     bmask1 = cv2.inRange(hsv_frame1, lower_blue, upper_blue)
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
+    if(a): 
+        print(gmask1)
+        a = False
     gmaskCoords1 = np.column_stack(np.where(gmask1 > 0))
     gmaskCoords2 = np.column_stack(np.where(gmask2 > 0))
     if(len(gmaskCoords1) > 0):
@@ -141,7 +145,7 @@ while cap1.isOpened() and cap2.isOpened():
     # write_report(s)
 
 
-    print(f"{x} , {y}")
+    # print(f"{x} , {y}")
     # gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
     # gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
 
