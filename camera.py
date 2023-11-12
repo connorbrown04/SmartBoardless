@@ -1,8 +1,7 @@
 import math
 import cv2 
 import numpy as np 
-import ctypes  
-ctypes.CDLL('/usr/local/lib/python3.11', mode=ctypes.RTLD_GLOBAL)
+#import ctypes  
 
 cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
