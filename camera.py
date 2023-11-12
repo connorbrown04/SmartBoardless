@@ -165,6 +165,8 @@ while cap1.isOpened() and cap2.isOpened():
     cv2.imshow('bmask2', bmask2)
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        print(gmask1)
+        for row in gmask1:
+            for val in row:
+                print(val)
 
 
