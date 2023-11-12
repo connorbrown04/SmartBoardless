@@ -2,12 +2,15 @@ import math
 import cv2 
 import numpy as np 
 import ctypes  
+ctypes.CDLL('/usr/local/lib/python3.11', mode=ctypes.RTLD_GLOBAL)
 
 cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
 
 right = False
 left = False
+
+print(os.environ)
 
 hdc = ctypes.cdll.user32.GetDC(0)  # Get the device context of the entire screen
 dpi = ctypes.cdll.gdi32.GetDeviceCaps(hdc, 88)  # 88 corresponds to LOGPIXELSX (horizontal DPI)
