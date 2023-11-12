@@ -6,41 +6,10 @@ import pandas as pd
 import threading
 from pynput import mouse
 #import ctypes  
-gx = 0
-gy = 0
-
-prevX = 0
-prevY = 0
-
-
-running = True
-
-pressed = False
 
 def write_report(report):
     fd = open('/dev/hidg0', 'rb+')
     fd.write(report)
-
-# def send_reports():
-#     while(running):
-#         s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
-#         write_report(s)
-
-
-# def on_click(x, y, button, pressed):
-#     if pressed:
-#         pressed = True
-#     else:
-#         pressed = False
-
-# #creates listener and sets it to its own thread
-# mouse_listener = mouse.Listener(on_click=on_click)
-
-# mouse_thread = threading.Thread(target=mouse_listener.start)
-
-# # report_thread = threading.Thread(target=send_reports)
-# mouse_thread.start()
-# report_thread.start()
 
 
 cap1 = cv2.VideoCapture(2)
@@ -62,10 +31,11 @@ upper_hot_pink = np.array([180, 255, 255])
 lower_blue = np.array([90, 50, 50])
 upper_blue = np.array([100, 255, 255])
 
-
+prevX = 0
+prevY = 0
 
 #will run into a camera dies or q is pressed
-while cap1.isOpened() and cap2.isOpened() and running:
+while cap1.isOpened() and cap2.isOpened():
     #takes input from both cameras
     ret1, frame1 = cap1.read()
     ret2, frame2 = cap2.read()
@@ -158,25 +128,18 @@ while cap1.isOpened() and cap2.isOpened() and running:
     x = (x/100)*16383
     y = 16383 - (y/100)*16383
 
-    if(y < 0): y = 0
-
-    
-
 
 
     x = math.floor((x + prevX)/4)
     y = math.floor((y + prevY)/4)
 
-    gx = x
-    gy = y
-
     # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
     #     x, y = prevX, prevY
-    prevX, prevY = x, y
+    # prevX, prevY = x, y
 
-    s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
-    write_report(s) 
-    
+
+    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    write_report(s)
 
 
     # print(f"{x} , {y}")
@@ -207,7 +170,7 @@ while cap1.isOpened() and cap2.isOpened() and running:
 
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        running = False
-
+        break
+    
 
 
