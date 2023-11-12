@@ -28,6 +28,9 @@ upper_hot_pink = np.array([180, 255, 255])
 lower_blue = np.array([90, 50, 50])
 upper_blue = np.array([100, 255, 255])
 
+prevX = 0
+prevY = 0
+
 #will run into a camera dies or q is pressed
 while cap1.isOpened() and cap2.isOpened():
     #takes input from both cameras
@@ -123,8 +126,13 @@ while cap1.isOpened() and cap2.isOpened():
     x += 50
     y += 50
 
-    x = math.floor((x/100)*4095)
-    y = math.floor((y/100)*4095)
+    x = (x/100)*4095
+    y = (y/100)*4095
+
+    x = math.floor((x + prevX)/2)
+    y = math.floor((y + prevY)/2)
+
+    prevX, prevY = x, y
 
 
     s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
