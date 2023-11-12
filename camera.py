@@ -54,8 +54,8 @@ while cap1.isOpened() and cap2.isOpened():
     #gets the median radian of the green mask
 
     gmask1Sum = []
-    for i in range(gmask1):
-        for j in range(gmask1[i]):
+    for i in range(len(gmask1)):
+        for j in range(len(gmask1[i])):
             if(gmask1[i][j] > 0): gmask1Sum[i] += 1
 
     gmaskCoords1 = np.column_stack(np.where(gmask1 > 0))
