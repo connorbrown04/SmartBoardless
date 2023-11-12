@@ -52,7 +52,7 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
-    gmask1Sum = list(size=len(gmask1))
+    gmask1Sum = [0]*len(gmask1)
 
     for i in range(len(gmask1)):
         for j in range(len(gmask1[i])):
