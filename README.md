@@ -1,1 +1,5 @@
-# Hackathon2023
+# NAME OF PROJECT
+This project is designed to use two cameras on any surface in order to turn it into a touchscreen. You would then be able to line it up with a projector to use it for many applications such as teaching. The user would just have to point a certain pen between the cameras which would track the position. Then when they click, the computer attached will interpret it as if someone is clicking on that spot relative to the cameras.
+
+The set up for this requires some hardware. Our setup uses two cameras and a raspberry pi. Currently the cameras track the position of three colors, bright pink, blue, and lime green wrapped around a pen. It also uses a standard wireless mouse to click. Ideally you would have some device that can be tracked by the cameras with a clicker on it, so that you can simply draw and click on the surface. The cameras are plugged into the rasp.erry pi, which runs all of the code in this github for the photo recognition and mouse detection software. It then sends the data to a computer to act as a touchscreen. This will not be easily put onto your computer in its current state, you will need to do a lot of work with HID protocols for your computer.
+
