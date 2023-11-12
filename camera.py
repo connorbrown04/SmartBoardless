@@ -53,17 +53,19 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
+
     def median(mask):
-        frame = pd.DataFrame(gmask2)
-        hist = frame.sum().div(255)
+        frame = pd.DataFrame(mask)
+        histogram = frame.sum()
+        histogram.div(255)
         total = 0
-        median_index = (hist.sum() + 1) / 2
-        for i in range(len(hist)):
-            total += hist[i]
-        if total > median_index:
-            return i
-
-
+        median_index = (histogram.sum() + 1) / 2
+        for value in range(len(histogram)):
+            total += histogram[value]
+            if total > median_index:
+                return value
+    
+    
     gmedianX1 = median(gmask1)
     gradians1 = gmedianX1*45/300*(math.pi/180)
     gmedianX2 = median(gmask2)
@@ -76,9 +78,9 @@ while cap1.isOpened() and cap2.isOpened():
         
     bmedianX1 = median(bmask1)
     bradians1 = bmedianX1*45/300*(math.pi/180)
-
     bmedianX2 = median(bmask2)
-    bradians2 = (bmedianX2*45/300)*(math.pi/180)      
+    bradians2 = (bmedianX2*45/300)*(math.pi/180)     
+
 
     #finds which of the median radians are the closest together and averages them
     gpdiff1 = abs(gradians1-pradians1)
@@ -108,6 +110,7 @@ while cap1.isOpened() and cap2.isOpened():
     h = 100
     x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
     y = math.tan(radians1)*(x+w)
+
     
     if x < -50:
         x = -50
@@ -124,6 +127,7 @@ while cap1.isOpened() and cap2.isOpened():
     x = (x/100)*4095
     y = (y/100)*4095
 
+
     x = math.floor((x + prevX)/2)
     y = math.floor((y + prevY)/2)
 
@@ -132,8 +136,8 @@ while cap1.isOpened() and cap2.isOpened():
     prevX, prevY = x, y
 
 
-    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    write_report(s)
+    # s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    # write_report(s)
 
 
     # print(f"{x} , {y}")
@@ -153,10 +157,13 @@ while cap1.isOpened() and cap2.isOpened():
     # cv2.imshow('bmask1', bmask1)
 
     # cv2.imshow('Original Frame2', frame2)
-    # cv2.imshow('gmask2', gmask2)
+    cv2.imshow('gmask2', gmask2)
     # cv2.imshow('pmask2', pmask2)
     # cv2.imshow('bmask2', bmask2)
 
+
+
+    
 
 
     #stops everything if q is pressed
