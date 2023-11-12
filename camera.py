@@ -1,7 +1,13 @@
 import math
 import cv2 
 import numpy as np 
+import struct
 #import ctypes  
+
+def write_report(report):
+    fd = open('/dev/hidg0', 'rb+')
+    fd.write(report)
+
 
 cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
@@ -102,19 +108,25 @@ while cap1.isOpened() and cap2.isOpened():
     #uses the radians to determine x and y coordinates
     w = 100
     h = 100
-    x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2)))-math.tan(radians1)
-    y = math.tan(radians1)*(x+w)
+    x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2)))-math.tan(radians1) + 50
+    y = math.tan(radians1)*(x+w) + 50
     
+    x = (x/100)*4095
+    y = (y/100)*4095
 
-    print(f"{x} , {y}")
-    gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
-    gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
+    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    write_report(s)
 
-    presult1 = cv2.bitwise_and(frame1, frame1, mask=pmask1)
-    presult2 = cv2.bitwise_and(frame2, frame2, mask=pmask2)
 
-    bresult1 = cv2.bitwise_and(frame1, frame1, mask=bmask1)
-    bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
+    #print(f"{x} , {y}")
+    # gresult1 = cv2.bitwise_and(frame1, frame1, mask=gmask1)
+    # gresult2 = cv2.bitwise_and(frame2, frame2, mask=gmask2)
+
+    # presult1 = cv2.bitwise_and(frame1, frame1, mask=pmask1)
+    # presult2 = cv2.bitwise_and(frame2, frame2, mask=pmask2)
+
+    # bresult1 = cv2.bitwise_and(frame1, frame1, mask=bmask1)
+    # bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
 
     #shows the masks of the cameras
     # cv2.imshow('Original Frame1', frame1)
@@ -129,3 +141,5 @@ while cap1.isOpened() and cap2.isOpened():
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
+
+
