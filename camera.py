@@ -152,15 +152,15 @@ while cap1.isOpened() and cap2.isOpened():
     # bresult2 = cv2.bitwise_and(frame2, frame2, mask=bmask2)
 
     #shows the masks of the cameras
-    # cv2.imshow('Original Frame1', frame1)
-    # cv2.imshow('gResult1', gresult1)
-    # cv2.imshow('pResult1', presult1)
-    # cv2.imshow('bResult1', bresult1)
+    cv2.imshow('Original Frame1', frame1)
+    cv2.imshow('gmask1', gmask1)
+    cv2.imshow('pmask1', pmask1)
+    cv2.imshow('bmask1', bmask1)
 
-    # cv2.imshow('Original Frame2', frame2)
-    # cv2.imshow('gResult2', gresult2)
-    # cv2.imshow('pResult2', presult2)
-    # cv2.imshow('bResult2', bresult2)
+    cv2.imshow('Original Frame2', frame2)
+    cv2.imshow('gmask2', gmask2)
+    cv2.imshow('pmask2', pmask2)
+    cv2.imshow('bmask2', bmask2)
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
