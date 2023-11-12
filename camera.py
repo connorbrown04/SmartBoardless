@@ -10,7 +10,7 @@ def write_report(report):
     fd.write(report)
 
 
-cap1 = cv2.VideoCapture(1)
+cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
 
 right = False
@@ -144,8 +144,8 @@ while cap1.isOpened() and cap2.isOpened():
     # prevX, prevY = x, y
 
 
-    # s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    # write_report(s)
+    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    write_report(s)
 
 
     # print(f"{x} , {y}")
