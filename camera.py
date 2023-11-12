@@ -15,16 +15,18 @@ prevY = 0
 
 running = True
 
+pressed = False
+
 def write_report(report):
     fd = open('/dev/hidg0', 'rb+')
     fd.write(report)
 
 def send_reports():
     while(running):
-        s = struct.pack('<B?B2HB', 1, pressed, 1, x, y, 1)
+        s = struct.pack('<B?B2HB', 1, pressed, 1, gx, gy, 1)
         write_report(s)
 
-pressed = False
+
 def on_click(x, y, button, pressed):
     if pressed:
         pressed = True
