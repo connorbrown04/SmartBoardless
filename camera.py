@@ -53,6 +53,11 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
+    gmask1Sum = []
+    for i in range(gmask1):
+        for j in range(gmask1[i]):
+            if(gmask1[i][j] > 0): gmask1Sum[i] += 1
+
     gmaskCoords1 = np.column_stack(np.where(gmask1 > 0))
     gmaskCoords2 = np.column_stack(np.where(gmask2 > 0))
     if(len(gmaskCoords1) > 0):
@@ -165,9 +170,10 @@ while cap1.isOpened() and cap2.isOpened():
     cv2.imshow('bmask2', bmask2)
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        for row in gmask1:
-            for val in row:
-                print(val, end='')
-            print('')
+        for row in gmask1Sum:
+            print(row)
+            # for val in row:
+            #     print(val, end='')
+            # print('')
 
 
