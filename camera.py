@@ -53,47 +53,32 @@ while cap1.isOpened() and cap2.isOpened():
     bmask2 = cv2.inRange(hsv_frame2, lower_blue, upper_blue)
     #gets the median radian of the green mask
 
-    def median(histogram):
+    def median(mask):
+        frame = pd.DataFrame(gmask2)
+        hist = frame.sum().div(255)
         total = 0
-        median_index = (histogram.sum() + 1) / 2
-        for i in range(len(histogram)):
-            total += histogram[i]
+        median_index = (hist.sum() + 1) / 2
+        for i in range(len(hist)):
+            total += hist[i]
         if total > median_index:
             return i
 
-    gmaskCoords1 = np.column_stack(np.where(gmask1 > 0))
-    gmaskCoords2 = np.column_stack(np.where(gmask2 > 0))
-    if(len(gmaskCoords1) > 0):
-        gmedianX1 = -(gmaskCoords1[math.floor(len(gmaskCoords1)/2)][1]-300)
-        gradians1 = gmedianX1*45/300*(math.pi/180)
-    
-    if(len(gmaskCoords2) > 0):
-        gmedianX2 = -(gmaskCoords2[math.floor(len(gmaskCoords2)/2)][1]-300)
-        gradians2 = (gmedianX2*45/300)*(math.pi/180)
-    
 
-    #gets the median radian of the pink mask
-    pmaskCoords1 = np.column_stack(np.where(pmask1 > 0))
-    pmaskCoords2 = np.column_stack(np.where(pmask2 > 0))
-    if(len(pmaskCoords1) > 0):
-        pmedianX1 = -(pmaskCoords1[math.floor(len(pmaskCoords1)/2)][1]-300)
-        pradians1 = pmedianX1*45/300*(math.pi/180)
-    
-    if(len(pmaskCoords2) > 0):
-        pmedianX2 = -(pmaskCoords2[math.floor(len(pmaskCoords2)/2)][1]-300)
-        pradians2 = (pmedianX2*45/300)*(math.pi/180)
+    gmedianX1 = median(gmask1)
+    gradians1 = gmedianX1*45/300*(math.pi/180)
+    gmedianX2 = median(gmask2)
+    gradians2 = (gmedianX2*45/300)*(math.pi/180)
+        
+    pmedianX1 = median(pmask1)
+    pradians1 = pmedianX1*45/300*(math.pi/180)
+    pmedianX2 = median(pmask2)
+    pradians2 = (pmedianX2*45/300)*(math.pi/180)
+        
+    bmedianX1 = median(bmask1)
+    bradians1 = bmedianX1*45/300*(math.pi/180)
 
-
-    #gets the median radian of the blue mask
-    bmaskCoords1 = np.column_stack(np.where(bmask1 > 0))
-    bmaskCoords2 = np.column_stack(np.where(bmask2 > 0))
-    if(len(bmaskCoords1) > 0):
-        bmedianX1 = -(bmaskCoords1[math.floor(len(bmaskCoords1)/2)][1]-300)
-        bradians1 = bmedianX1*45/300*(math.pi/180)
-    
-    if(len(bmaskCoords2) > 0):
-        bmedianX2 = -(bmaskCoords2[math.floor(len(bmaskCoords2)/2)][1]-300)
-        bradians2 = (bmedianX2*45/300)*(math.pi/180)
+    bmedianX2 = median(bmask2)
+    bradians2 = (bmedianX2*45/300)*(math.pi/180)      
 
     #finds which of the median radians are the closest together and averages them
     gpdiff1 = abs(gradians1-pradians1)
@@ -121,7 +106,7 @@ while cap1.isOpened() and cap2.isOpened():
     #uses the radians to determine x and y coordinates
     w = 100
     h = 100
-    x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2)))-math.tan(radians1)
+    x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
     y = math.tan(radians1)*(x+w)
     
     if x < -50:
@@ -147,8 +132,8 @@ while cap1.isOpened() and cap2.isOpened():
     prevX, prevY = x, y
 
 
-    # s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    # write_report(s)
+    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
+    write_report(s)
 
 
     # print(f"{x} , {y}")
@@ -168,7 +153,7 @@ while cap1.isOpened() and cap2.isOpened():
     # cv2.imshow('bmask1', bmask1)
 
     # cv2.imshow('Original Frame2', frame2)
-    cv2.imshow('gmask2', gmask2)
+    # cv2.imshow('gmask2', gmask2)
     # cv2.imshow('pmask2', pmask2)
     # cv2.imshow('bmask2', bmask2)
 
@@ -176,9 +161,6 @@ while cap1.isOpened() and cap2.isOpened():
 
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        g2Frame = pd.DataFrame(gmask2)
-        g2Hist = g2Frame.sum()
-        print(median(g2Hist.div(255)))
-        print(gmedianX1)
+        break
 
 
