@@ -111,8 +111,8 @@ while cap1.isOpened() and cap2.isOpened():
     x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2)))-math.tan(radians1) + 50
     y = math.tan(radians1)*(x+w) + 50
     
-    x = (x/100)*4095
-    y = (y/100)*4095
+    x = math.floor((x/100)*4095)
+    y = math.floor((y/100)*4095)
 
     s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
     write_report(s)
