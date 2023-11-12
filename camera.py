@@ -131,10 +131,10 @@ while cap1.isOpened() and cap2.isOpened():
     x = (x/100)*4095
     y = (y/100)*4095
 
-    x = math.floor((x + prevX)/2)
-    y = math.floor((y + prevY)/2)
+    x = math.floor((x + prevX)/4)
+    y = math.floor((y + prevY)/4)
 
-    if(abs(x - prevX) > 400 or abs(y - prevY) > 400):
+    if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
         x, y = prevX, prevY
     prevX, prevY = x, y
 
