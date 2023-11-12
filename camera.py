@@ -167,6 +167,7 @@ while cap1.isOpened() and cap2.isOpened():
     if cv2.waitKey(25) & 0xFF == ord('q'):
         for row in gmask1:
             for val in row:
-                print(val)
+                print(val, end='')
+            print('')
 
 
