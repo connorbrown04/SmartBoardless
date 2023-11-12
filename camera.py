@@ -3,11 +3,42 @@ import cv2
 import numpy as np 
 import struct
 import pandas as pd
+import threading
+from pynput import mouse
 #import ctypes  
+x = 0
+y = 0
+
+prevX = 0
+prevY = 0
+
+
+running = True
 
 def write_report(report):
     fd = open('/dev/hidg0', 'rb+')
     fd.write(report)
+
+def send_reports():
+    while(running):
+        s = struct.pack('<B?B2HB', 1, pressed, 1, x, y, 1)
+        write_report(s)
+
+pressed = False
+def on_click(x, y, button, pressed):
+    if pressed:
+        pressed = True
+    else:
+        pressed = False
+
+#creates listener and sets it to its own thread
+mouse_listener = mouse.Listener(on_click=on_click)
+
+mouse_thread = threading.Thread(target=mouse_listener.start)
+
+report_thread = threading.Thread(target=send_reports)
+mouse_thread.start()
+report_thread.start()
 
 
 cap1 = cv2.VideoCapture(2)
@@ -29,11 +60,10 @@ upper_hot_pink = np.array([180, 255, 255])
 lower_blue = np.array([90, 50, 50])
 upper_blue = np.array([100, 255, 255])
 
-prevX = 0
-prevY = 0
+
 
 #will run into a camera dies or q is pressed
-while cap1.isOpened() and cap2.isOpened():
+while cap1.isOpened() and cap2.isOpened() and running:
     #takes input from both cameras
     ret1, frame1 = cap1.read()
     ret2, frame2 = cap2.read()
@@ -136,8 +166,7 @@ while cap1.isOpened() and cap2.isOpened():
     # prevX, prevY = x, y
 
 
-    s = struct.pack('<B?B2HB', 1, True, 1, x, y, 1)
-    write_report(s)
+    
 
 
     # print(f"{x} , {y}")
@@ -168,6 +197,7 @@ while cap1.isOpened() and cap2.isOpened():
 
     #stops everything if q is pressed
     if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
+        running = False
+
 
 
