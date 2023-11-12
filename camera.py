@@ -3,7 +3,7 @@ import cv2
 import numpy as np 
 import ctypes  
 
-cap1 = cv2.VideoCapture(1)
+cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(2)
 
 right = False
