@@ -6,8 +6,8 @@ import pandas as pd
 import threading
 from pynput import mouse
 #import ctypes  
-x = 0
-y = 0
+gx = 0
+gy = 0
 
 prevX = 0
 prevY = 0
@@ -156,6 +156,11 @@ while cap1.isOpened() and cap2.isOpened() and running:
     x = (x/100)*16383
     y = 16383 - (y/100)*16383
 
+    if(y < 0): y = 0
+
+    gx = x
+    gy = y
+
 
 
     x = math.floor((x + prevX)/4)
@@ -163,7 +168,7 @@ while cap1.isOpened() and cap2.isOpened() and running:
 
     # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
     #     x, y = prevX, prevY
-    # prevX, prevY = x, y
+    prevX, prevY = x, y
 
 
     
