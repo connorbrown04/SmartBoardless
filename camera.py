@@ -117,14 +117,14 @@ while cap1.isOpened() and cap2.isOpened():
     x = (math.tan(radians1)*w+h)/(math.tan(radians2+(math.pi/2))-math.tan(radians1))
     y = math.tan(radians1)*(x+w)
 
-    if x < -50:
-        x = -50
-    if x > 50:
-        x = 50
-    if y < -50:
-        y = -50
-    if y > 50:
-        y = 50
+    # if x < -50:
+    #     x = -50
+    # if x > 50:
+    #     x = 50
+    # if y < -50:
+    #     y = -50
+    # if y > 50:
+    #     y = 50
     
     x += 50
     y += 50
