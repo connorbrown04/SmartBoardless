@@ -160,13 +160,15 @@ while cap1.isOpened() and cap2.isOpened() and running:
 
     if(y < 0): y = 0
 
-    gx = x
-    gy = y
+    
 
 
 
     x = math.floor((x + prevX)/4)
     y = math.floor((y + prevY)/4)
+
+    gx = x
+    gy = y
 
     # if(abs(x - prevX) > 1000 or abs(y - prevY) > 1000):
     #     x, y = prevX, prevY
