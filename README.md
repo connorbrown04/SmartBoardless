@@ -1,4 +1,4 @@
-# NAME OF PROJECT
+# SmartBoardless
 This is a project for the 2023 Laf-Lehigh Rivalry Hackathon. Our project is a cost effective alternative to the SMART Boards seen in many schools today, this allows for more students to learn in an effective, engaging, and modern environment.
 
 This project uses two cameras on any surface and turns it into a touchscreen. In combination with a projector it enables many new and adaptable ways to teach compared to a regular whiteboard. A user only has to point a specialized pen between the cameras and its position will be tracked on their computer.
